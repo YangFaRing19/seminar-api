@@ -1,5 +1,5 @@
 services:
-  db:
+  seminar-db:
     image: mariadb:10.6
     container_name: seminar-db
     restart: always
@@ -17,6 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    networks:
+      - seminar-network
 
   web:
     build: .
@@ -33,6 +35,12 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-seminar_password}
     ports:
       - "5000:5000"
+    networks:
+      - seminar-network
 
 volumes:
   seminar_data:
+
+networks:
+  seminar-network:
+    driver: bridge
