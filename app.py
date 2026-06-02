@@ -80,6 +80,10 @@ def create_tables():
     cursor.close()
     conn.close()
 
+@app.route('/')
+def index():
+    return app.send_static_file("index.html")
+
 @app.route("/api/rooms", methods=["GET"])
 def get_rooms():
 
