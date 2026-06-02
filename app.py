@@ -318,5 +318,7 @@ def delete_reservation(reservation_id):
 def health():
     return jsonify({"status": "ok"})
 
+create_tables()
+
 if __name__ == "__main__":
     app.run(debug=True)
