@@ -233,7 +233,7 @@ def get_reservations():
         params.append(room_id)
 
     if date:
-        sql += " AND date=%s"
+        sql += ' AND date="%s"'
         params.append(date)
 
     cursor.execute(sql, tuple(params))
