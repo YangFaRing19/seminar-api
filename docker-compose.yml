@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mariadb:10.6
+    container_name: seminar-db
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+      MARIADB_DATABASE: ${DB_NAME:-seminar_db}
+      MARIADB_USER: ${DB_USER:-seminar_user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-seminar_password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - seminar_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    container_name: seminar-api
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-seminar_db}
+      DB_USER: ${DB_USER:-seminar_user}
+      DB_PASSWORD: ${DB_PASSWORD:-seminar_password}
+    ports:
+      - "5000:5000"
+
+volumes:
+  seminar_data:
