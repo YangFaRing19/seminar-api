@@ -221,9 +221,18 @@ def get_reservations():
     cursor = conn.cursor(dictionary=True)
 
     sql = """
-        SELECT *
+        SELECT
+            id,
+            room_id,
+            user_name,
+            user_email,
+            date,
+            TIME_FORMAT(start_time, '%H:%i') AS start_time,
+            TIME_FORMAT(end_time, '%H:%i') AS end_time,
+            purpose,
+            created_at,
+            updated_at
         FROM reservations
-        WHERE 1=1
     """
 
     params = []
