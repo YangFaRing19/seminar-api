@@ -226,7 +226,7 @@ def get_reservations():
             room_id,
             user_name,
             user_email,
-            date,
+            DATE_FORMAT(date, '%Y-%m-%d') AS date,
             TIME_FORMAT(start_time, '%H:%i') AS start_time,
             TIME_FORMAT(end_time, '%H:%i') AS end_time,
             purpose,
