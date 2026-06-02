@@ -4,10 +4,10 @@ services:
     container_name: seminar-db
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
-      MARIADB_DATABASE: ${DB_NAME:-seminar_db}
-      MARIADB_USER: ${DB_USER:-seminar_user}
-      MARIADB_PASSWORD: ${DB_PASSWORD:-seminar_password}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:1234}
+      MARIADB_DATABASE: ${DB_NAME:seminar_db}
+      MARIADB_USER: ${DB_USER:root}
+      MARIADB_PASSWORD: ${DB_PASSWORD:1234}
     ports:
       - "3306:3306"
     volumes:
