@@ -4,14 +4,14 @@ services:
     container_name: seminar-db
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:1234}
-      MARIADB_DATABASE: ${DB_NAME:seminar_db}
-      MARIADB_USER: ${DB_USER:root}
-      MARIADB_PASSWORD: ${DB_PASSWORD:1234}
+      MARIADB_ROOT_PASSWORD: 1234
+      MARIADB_DATABASE: ${DB_NAME:-seminar_db}
+      MARIADB_USER: ${DB_USER:-seminar_user}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-seminar_password}
     ports:
       - "3306:3306"
     volumes:
-      - seminar_data:/var/lib/mysql
+      - ./seminar_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root_password}"]
       interval: 10s
@@ -25,7 +25,7 @@ services:
     container_name: seminar-api
     restart: always
     depends_on:
-      db:
+      seminar-db:
         condition: service_healthy
     environment:
       DB_HOST: seminar-db
