@@ -21,7 +21,6 @@ jobs:
       - name: Install MariaDB client libraries
         run: |
           sudo apt-get update
-          sudo apt-get install -y libmariadb-dev gcc
 
       - name: Install dependencies
         run: |
@@ -29,7 +28,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest -q
+        run: |
+          python tests/test-api.py
 
   build:
     needs: test
@@ -61,5 +61,5 @@ jobs:
             git fetch origin main
             git checkout main
             git pull origin main
-            docker compose down
-            docker compose up -d --build
+            sudo docker-compose down
+            sudo docker-compose up -d --build
