@@ -17,6 +17,69 @@ DB_CONFIG = {
 def get_db():
     return mysql.connector.connect(**DB_CONFIG)
 
+def create_database():
+
+    conn = mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT", 3306)),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD")
+    )
+
+    cursor = conn.cursor()
+
+    cursor.execute(f"""
+        CREATE DATABASE IF NOT EXISTS {os.getenv('DB_NAME')}
+        CHARACTER SET utf8mb4
+        COLLATE utf8mb4_general_ci
+    """)
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+def create_tables():
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    # rooms
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS rooms (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            capacity INT NOT NULL,
+            equipment VARCHAR(255) NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    """)
+
+    # reservations
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS reservations (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            room_id INT NOT NULL,
+            user_name VARCHAR(100) NOT NULL,
+            user_email VARCHAR(100) NOT NULL,
+            date DATE NOT NULL,
+            start_time TIME NOT NULL,
+            end_time TIME NOT NULL,
+            purpose VARCHAR(255) NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            CONSTRAINT fk_reservations_room
+                FOREIGN KEY (room_id) REFERENCES rooms(id)
+                ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    """)
+
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
 @app.route("/api/rooms", methods=["GET"])
 def get_rooms():
 
