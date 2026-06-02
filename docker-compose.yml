@@ -1,5 +1,5 @@
 services:
-  db:
+  seminar-db:
     image: mariadb:10.6
     container_name: seminar-db
     restart: always
